@@ -4,3 +4,9 @@ h1 {
     color: #434343;
     text-align: left;
 }
+
+.no-border-on-focus:focus {
+    border: none;
+    box-shadow: none;
+    outline: none;
+  }
