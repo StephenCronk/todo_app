@@ -15,6 +15,13 @@ class Task(models.Model):
     repeats = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tasks")
+    index = models.IntegerField(default=0)
+    id = models.AutoField(primary_key=True)
     def __str__(self):
         return f"{self.task} - {self.user}"
 
+class Hero(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="heroes")
+    level = models.IntegerField(default=1)
+    def __str__(self):
+        return self.name
