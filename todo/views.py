@@ -1,4 +1,5 @@
 import calendar
+from django.db.models import Count
 from datetime import date, datetime, timedelta
 from itertools import chain
 import time
@@ -20,6 +21,20 @@ class NewTaskForm(forms.Form):
 
 # views.py
 from django.http import JsonResponse
+
+def counthabits(request):
+    # Get the user's tasks and count the number of times each task has been completed
+    completed_tasks = Task.objects.filter(user=request.user, completed=True) \
+                                  .values('task') \
+                                  .annotate(completions=Count('task')) \
+                                  .order_by('-completions')[:5]
+
+    # Convert the query result into a list of dictionaries
+    top_completed_tasks = [{'task': task['task'], 'completions': task['completions']} for task in completed_tasks]
+    print(f"top_completed_tasks: {top_completed_tasks}")
+    # Return the top completed tasks as JSON
+    return JsonResponse({'top_completed_tasks': top_completed_tasks})
+
 
 def loadtasks(request, year, month, day):
     print("loadtasks called")

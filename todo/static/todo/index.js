@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function()
     //load all known tasks
     LoadTasks().then(MakeDarkMode);
     MonthCompletions().then(MakeGraph);
-
+    FillHabits();
     //listener for button
     // Get a reference to the button element by its id
     const newTaskButton = document.getElementById('newTaskButton');
@@ -90,8 +90,10 @@ function SetDarkModeOnElement(element, darkModeEnabled)
         } else {
             input.classList.remove('text-light');
         }
-        });
+    });
 }
+
+
 
 //task card template:
 var newTaskDiv = 
@@ -439,6 +441,52 @@ function MonthCompletions() {
 });
 }
 
+function FillHabitSpot(taskText, completionText)
+{
+    //adds a div to the habit list
+    var habitDiv = 
+        `<li class="list-group-item d-flex justify-content-between align-items-center" style="background-color: transparent; border-color: transparent; border-radius: 12px;">
+        ${taskText}
+        <span id="habitLabel" class="badge bg-warning rounded-pill" style="color: #333;">${completionText}</span>
+        </li>`;
+    
+    //find parent and add
+    var habitItem = document.createElement("div");
+    habitItem.innerHTML = habitDiv;
+
+    var habitParent = document.getElementById("habit-list");
+    if(habitParent != null)
+    {
+        habitParent.appendChild(habitItem);
+    }
+
+}
+
+function FillHabits() {
+    // Make a fetch request to the 'monthlycompletions' view
+    fetch('counthabits') // Update the URL to match your Django URL configuration
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Network response was not ok: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Data contains completion percentages for each day
+            if (data.top_completed_tasks) {
+                data.top_completed_tasks.forEach(item => {
+                    //fill each spot, make new div etc
+
+                    FillHabitSpot(`${item.task}`, `${item.completions}`);
+
+                    console.log(`habit ${item.task}: ${item.completions}`);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+    });
+}
 
 //load tasks function
 function LoadTasks() {

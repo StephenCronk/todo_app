@@ -11,6 +11,7 @@ urlpatterns = [
     path('update-repeat', views.updateRepeat, name='updateRepeat'),
     path('complete', views.complete, name="complete"),
     path('monthlycompletions', views.monthlycompletions, name="monthlycompletions"),
+    path('counthabits', views.counthabits, name="counthabits"),
 
     path("login", views.login_view, name="login"),
     path("logout", views.logout_view, name="logout"),
