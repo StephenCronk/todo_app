@@ -9,6 +9,7 @@ from django.shortcuts import render
 from django import forms
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 import json
 from django.contrib.auth import authenticate, login, logout
@@ -82,8 +83,7 @@ def loadtasks(request, year, month, day):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
 
-
-# Create your views here.
+@login_required
 def index(request):
     if "tasks" not in request.session:
         request.session["tasks"] = []

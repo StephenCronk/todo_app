@@ -1,3 +1,7 @@
+
+// If the user is not authenticated, redirect to the login page
+
+
 var sortable = $('sortable');
 
 var drake = dragula([sortable]);
