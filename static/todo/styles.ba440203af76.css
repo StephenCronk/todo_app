@@ -284,13 +284,13 @@ radial-gradient(at 6% 53%, hsla(349,100%,50%,1) 0px, transparent 50%);
   width: 4em;
   height: 2em;
   margin-right: 8px;
-  background-image: url('dayslider.png');
+  background-image: url("dayslider.7bacf790ecd3.png");
   background-size: cover;
   background-repeat: no-repeat;
 }
 
 .switch.checked {
-  background-image: url('images/nightslider.png');
+  background-image: url("images/nightslider.8cfea42a6a4c.png");
 }
 
 
@@ -332,11 +332,11 @@ radial-gradient(at 6% 53%, hsla(349,100%,50%,1) 0px, transparent 50%);
 }
 
 .switch input:checked + .slider {
-  background-image: url('images/sunSlider.png');
+  background-image: url("images/sunSlider.7800b08c9000.png");
 }
 
 .switch input:focus + .slider {
-  background-image: url('images/sliderBkg.png');
+  background-image: url("images/sliderBkg.4e585371bf28.png");
 }
 
 .switch input:checked ~ .off {
