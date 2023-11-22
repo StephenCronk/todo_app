@@ -15,6 +15,106 @@ function c() {
     console.log.apply(console, arguments);
 }
 
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function clouds()
+{
+    let j = 0;
+
+    let count = 2;
+    let scene = document.querySelector('.scene');
+
+    while(j< count)
+    {
+        let cloud = document.createElement('j');
+        // Specify the width and height attributes for the image
+        //smaller=slower
+        //stepwise 3 sizes
+        const baseSize = 48;
+
+        var zIndexValue = getRandomInt(1,3);
+
+        var imageSize = baseSize*zIndexValue + "px"; // Adjust the size as needed
+
+        // Set the innerHTML with the image tag including the size attributes
+        cloud.innerHTML = `<img src='static/todo/images/cloud.png' width='${imageSize}' height='${imageSize}' style='z-index: ${zIndexValue};'>`;
+        let x = Math.floor(Math.random() * scene.clientWidth);
+        const baseDuration = 12;
+        let duration = baseDuration / zIndexValue;
+
+        cloud.style.left = x + 'px';
+        cloud.style.animationDuration = duration + 's';
+
+        scene.appendChild(cloud);
+        console.log("spawning cloud");
+        j++;
+        
+    }
+}
+
+function SpeedBoost(ratio)
+{
+    //get all stars in scene
+    
+    //multiply current duration by speed boost constant like 0.5
+    const iTags = document.querySelectorAll('i');
+    console.log(`speed boost called on ${iTags.length}`);
+    iTags.forEach((iTag) => {
+        // Perform desired action on each iTag element
+        const oldDuration = parseFloat(iTag.style.animationDuration);
+        const newDuration = oldDuration * ratio; // Calculate new animation duration (50% faster)
+        
+        // console.log(`old: ${oldDuration} new duration is ${iTag.style.animationDuration}`);
+
+        // Implement a smooth transition using requestAnimationFrame
+        let currentDuration = oldDuration;
+        const animationStep = (elapsedTime) => {
+        if (currentDuration > newDuration) {
+            currentDuration -= (elapsedTime / 1000) * 0.01; // Adjust duration gradually
+        } else {
+            currentDuration = newDuration;
+            cancelAnimationFrame(animationId); // Stop the animation loop
+        }
+
+        iTag.style.animationDuration = `${currentDuration}s`; // Update animation duration dynamically
+        animationId = requestAnimationFrame(animationStep); // Continue the animation loop
+        };
+
+        let animationId = requestAnimationFrame(animationStep); // Start the animation loop
+      });
+}
+
+function stars()
+{
+    
+    let i = 0;
+
+    let count = 30;
+    let scene = document.querySelector('.scene');
+
+    while(i< count)
+    {
+        let star = document.createElement('i');
+        let x = Math.floor(Math.random() * scene.clientWidth);
+        let duration = Math.random() * 5 + 5;
+        let h = Math.random() * 100;
+
+        star.style.left = x + 'px';
+        star.style.width = 4 + 'px';
+        star.style.height = h + 'px';
+        star.style.animationDuration = duration + 's';
+
+        scene.appendChild(star);
+        console.log("spawning star");
+        i++;
+    }
+    
+}
+
 // Now you can use c() instead of console.log()
 c("This is a shortened log message.");
 
@@ -37,6 +137,8 @@ document.addEventListener('DOMContentLoaded', function()
     LoadTasks().then(MakeDarkMode);
     MonthCompletions().then(MakeGraph);
     FillHabits();
+    stars();
+    clouds();
     //listener for button
     // Get a reference to the button element by its id
     const newTaskButton = document.getElementById('newTaskButton');
@@ -50,6 +152,8 @@ document.addEventListener('DOMContentLoaded', function()
         
         // You can perform any actions you want in response to the button click
     });
+
+    
 });
 
 
@@ -291,6 +395,17 @@ function ToggleDarkMode(darkModeEnabled)
          }
      });
 
+     const navbar = document.getElementById('navbar');
+     if(darkModeEnabled)
+     {
+        navbar.classList.add('bg-dark');
+        navbar.classList.remove('bg-light');
+     }
+     else{
+        navbar.classList.remove('bg-dark');
+        navbar.classList.add('bg-light');
+     }
+
      const cards = document.querySelectorAll('.card-round');
      console.log("cards in doc: "+ cards.length);
      cards.forEach((card) => {
@@ -320,9 +435,22 @@ function MakeDarkMode()
 {
     // Toggle dark mode when the checkbox is clicked
     const darkModeToggle = document.getElementById('darkModeToggle');
-    
+    const darkModeSwitch = document.getElementById('darkModeSwitch');
         darkModeToggle.addEventListener('change', () => {
         const darkModeEnabled = darkModeToggle.checked;
+
+
+        if(darkModeEnabled)
+        {
+            darkModeSwitch.classList.add('checked');
+        }
+        else
+        {
+            darkModeSwitch.classList.remove('checked');
+        }
+
+
+
         ToggleDarkMode(darkModeEnabled);
     });
 }
@@ -808,6 +936,7 @@ function UpdateTaskComplete(IDNo, active)
         task_complete: active
     };
 
+    SpeedBoost(active ? 0.5 : 2);
     console.log("saving task competion" + IDNo + " " + active);
 
     SetTaskCompletionButton(IDNo, active);
